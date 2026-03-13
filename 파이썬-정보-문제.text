@@ -1,0 +1,786 @@
+% !TEX program = xelatex
+\documentclass[a4paper, 11pt]{article}
+
+% ── Encoding & Fonts ──
+\usepackage{fontspec}
+\setmainfont{Noto Sans CJK KR}
+\setsansfont{Noto Sans CJK KR}
+\setmonofont{Noto Sans Mono CJK KR}[Scale=0.85, BoldFont=Noto Sans Mono CJK KR Bold]
+
+% ── Page Layout ──
+\usepackage[
+  top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm,
+  headheight=14pt
+]{geometry}
+
+% ── Colors (ink-saving: minimal, dark text only) ──
+\usepackage{xcolor}
+\definecolor{mainblue}{HTML}{1B3A5C}
+\definecolor{codeborder}{HTML}{AAAAAA}
+\definecolor{sectionbar}{HTML}{333333}
+\definecolor{darktext}{HTML}{1F2937}
+\definecolor{graytext}{HTML}{6B7280}
+\definecolor{hintborder}{HTML}{888888}
+\definecolor{typeA}{HTML}{2563EB}
+\definecolor{typeB}{HTML}{059669}
+\definecolor{typeC}{HTML}{DC2626}
+\definecolor{typeD}{HTML}{92400E}
+
+% ── Packages ──
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{lastpage}
+
+% ── Paragraph & Spacing ──
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setstretch{1.25}
+
+% ── Header / Footer ──
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\color{graytext} 파이썬 요약 문제집 — 문제편}
+\fancyhead[R]{\small\color{graytext} 고1 정보교과 대비}
+\fancyfoot[C]{\small\color{graytext} \thepage\,/\,\pageref{LastPage}}
+
+% ── Code Listing Style (white bg, thin border) ──
+\lstdefinestyle{pycode}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{black},
+  stringstyle=\color{darktext},
+  commentstyle=\itshape\color{graytext},
+  numberstyle=\tiny\color{graytext},
+  numbers=left,
+  numbersep=8pt,
+  xleftmargin=14pt,
+  framexleftmargin=14pt,
+  backgroundcolor=\color{white},
+  frame=single,
+  rulecolor=\color{codeborder},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  aboveskip=8pt,
+  belowskip=8pt,
+}
+\lstset{style=pycode}
+
+% ── Section Styling (outline only) ──
+\newcommand{\unitsection}[2]{%
+  \vspace{8pt}%
+  \noindent%
+  \begin{tikzpicture}
+    \draw[sectionbar, line width=1.2pt] (0,0) rectangle (\textwidth, 0.95);
+    \node[anchor=west, font=\large\bfseries\color{sectionbar}] at (0.4, 0.475) {#1};
+    \node[anchor=east, font=\small\color{graytext}] at (\textwidth-0.3, 0.475) {#2};
+  \end{tikzpicture}%
+  \vspace{6pt}%
+}
+
+% ── Problem Box (white bg, thin border) ──
+\newcounter{probcnt}
+\newtcolorbox{problembox}[2][]{%
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=codeborder,
+  coltitle=black,
+  fonttitle=\bfseries\small,
+  title={\stepcounter{probcnt}\,문제 \theprobcnt\hfill #2},
+  colbacktitle=white,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0.5pt,
+  arc=2pt,
+  toptitle=3pt, bottomtitle=3pt,
+  titlerule=0.4pt,
+  #1
+}
+
+% ── Type Tags (text only) ──
+\newcommand{\tagpredict}{{\small\color{typeA}\bfseries [출력 예측]}}
+\newcommand{\tagfill}{{\small\color{typeB}\bfseries [빈칸 채우기]}}
+\newcommand{\tagerror}{{\small\color{typeC}\bfseries [오류 찾기]}}
+\newcommand{\tagconcept}{{\small\color{typeD}\bfseries [개념]}}
+
+% ── Hint Box (left rule only) ──
+\newtcolorbox{hintbox}{%
+  enhanced, breakable,
+  colback=white,
+  colframe=hintborder,
+  boxrule=0pt, leftrule=2pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  arc=0pt,
+  fontupper=\small\color{darktext},
+}
+
+% ── Answer blank ──
+\newcommand{\answerblank}[1][4cm]{%
+  \par\vspace{4pt}%
+  \noindent 답:\,\rule[-.3ex]{#1}{0.5pt}%
+  \vspace{2pt}%
+}
+
+\newcommand{\answerlines}[1][3]{%
+  \par\vspace{4pt}%
+  \foreach \i in {1,...,#1}{%
+    \noindent\rule{\linewidth}{0.3pt}\par\vspace{6pt}%
+  }%
+}
+
+% ══════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── COVER PAGE (ink-saving: text only) ──
+\thispagestyle{empty}
+
+\vspace*{\fill}
+\begin{center}
+{\small\color{graytext} 고1 정보교과 대비}\\[20pt]
+{\fontsize{36}{42}\selectfont\bfseries\color{mainblue} 파이썬}\\[8pt]
+{\fontsize{24}{30}\selectfont\color{sectionbar} 요약 문제집}\\[20pt]
+\rule{6cm}{0.8pt}\\[14pt]
+{\fontsize{13}{18}\selectfont\color{graytext} 문제편}\\[30pt]
+{\small\color{graytext} 총 37문제\enspace·\enspace 출력 예측 · 빈칸 채우기 · 오류 찾기 · 개념}
+\end{center}
+\vspace*{\fill}
+
+\clearpage
+
+% ── TABLE OF CONTENTS ──
+\thispagestyle{fancy}
+\vspace*{8pt}
+{\Large\bfseries\color{mainblue} 목차}
+\vspace{10pt}
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{@{} >{\bfseries\color{mainblue}}l X >{\color{graytext}\small}r @{}}
+1단원 & 입출력 기본 다지기 & 문제 1\,--\,6 \\
+2단원 & 조건문 완전 정복 & 문제 7\,--\,13 \\
+3단원 & 조건문 응용 프로젝트 & 문제 14\,--\,17 \\
+4단원 & while 반복문과 누적 계산 & 문제 18\,--\,24 \\
+5단원 & for 반복문과 패턴 출력 & 문제 25\,--\,30 \\
+6단원 & 중첩 반복문 마스터 & 문제 31\,--\,34 \\
+7단원 & 기초 모듈 활용 {\normalfont\color{graytext}(부록)} & 문제 35\,--\,37 \\
+\end{tabularx}
+
+\vspace{20pt}
+\begin{hintbox}
+\textbf{활용법}\\[2pt]
+• 코드를 눈으로 읽고, 연필로 한 줄씩 추적하며 풀어보세요.\\
+• 변수의 값 변화를 빈 공간에 메모하면 실수를 줄일 수 있습니다.\\
+• 유형 태그(\,\tagpredict\;\tagfill\;\tagerror\;\tagconcept\,)를 참고해 약한 유형을 집중 연습하세요.
+\end{hintbox}
+
+\clearpage
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 1
+% ══════════════════════════════════════════════════════════════
+\unitsection{1단원\quad 입출력 기본 다지기}{6문제}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+a = "20"
+b = "25"
+print(a + b)
+print(int(a) + int(b))
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+사용자가 \texttt{170823}을 입력했을 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+data = input()
+year = int(data[0:2]) + 2000
+month = data[2:4]
+day = data[4:6]
+print(year, month, day, sep="/")
+\end{lstlisting}
+\answerblank[8cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+아래 코드가 다음과 같이 출력되도록 \texttt{(가)}와 \texttt{(나)}에 들어갈 것을 쓰시오.
+
+\vspace{2pt}
+\textbf{[실행 결과]}\quad\texttt{사과\$바나나\$포도}
+
+\begin{lstlisting}
+fruits = ["사과", "바나나", "포도"]
+print(fruits[0], fruits[1], fruits[2], sep=__(가)__, end=__(나)__)
+\end{lstlisting}
+
+(가):\,\rule[-.3ex]{4cm}{0.5pt}\qquad (나):\,\rule[-.3ex]{4cm}{0.5pt}
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+사용자가 차례로 \texttt{7}과 \texttt{3}을 입력했을 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+a = int(input())
+b = int(input())
+print(a // b, a % b)
+print(a ** b)
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagerror}
+다음 코드를 실행하면 오류가 발생한다. 오류의 원인을 설명하고, 올바르게 수정하시오.
+\begin{lstlisting}
+age = input("나이를 입력하세요: ")
+next_year = age + 1
+print("내년 나이:", next_year)
+\end{lstlisting}
+\answerlines[3]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+사용자가 \texttt{4250}을 입력했을 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+seconds = int(input())
+hours = seconds // 3600
+minutes = (seconds % 3600) // 60
+secs = seconds % 60
+print(hours, "시간", minutes, "분", secs, "초")
+\end{lstlisting}
+\answerblank[10cm]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 2
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{2단원\quad 조건문 완전 정복}{7문제}
+
+\begin{problembox}{\tagconcept}
+다음 두 코드의 실행 결과가 서로 다른 경우가 있다. \texttt{score = 72}일 때 각각의 결과를 쓰고, 차이가 생기는 이유를 간단히 설명하시오.
+
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{[코드 A]}
+\begin{lstlisting}
+score = 72
+if score >= 90:
+    print("A")
+elif score >= 80:
+    print("B")
+elif score >= 70:
+    print("C")
+else:
+    print("D")
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{[코드 B]}
+\begin{lstlisting}
+score = 72
+if score >= 90:
+    print("A")
+if score >= 80:
+    print("B")
+if score >= 70:
+    print("C")
+\end{lstlisting}
+\end{minipage}
+
+\vspace{6pt}
+코드 A 결과:\,\rule[-.3ex]{3cm}{0.5pt}\qquad 코드 B 결과:\,\rule[-.3ex]{3cm}{0.5pt}
+
+이유:\vspace{2pt}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagerror}
+다음 코드에는 두 가지 오류가 있다. 모두 찾아 설명하시오.
+\begin{lstlisting}
+x = int(input())
+if x > 0
+    print("양수")
+elif x = 0:
+    print("영")
+else:
+    print("음수")
+\end{lstlisting}
+\answerlines[3]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+\texttt{x = 2024}일 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+x = 2024
+if x % 400 == 0:
+    print("윤년")
+elif x % 100 == 0:
+    print("평년")
+elif x % 4 == 0:
+    print("윤년")
+else:
+    print("평년")
+\end{lstlisting}
+\answerblank[5cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+세 변의 길이 \texttt{a}, \texttt{b}, \texttt{c}를 입력받아 삼각형의 종류를 판별하는 코드이다. 빈칸 \texttt{(가)}, \texttt{(나)}를 채우시오.
+\begin{lstlisting}
+a = int(input())
+b = int(input())
+c = int(input())
+if a == b __(가)__ b == c:
+    print("정삼각형")
+elif a == b __(나)__ b == c or a == c:
+    print("이등변삼각형")
+else:
+    print("일반 삼각형")
+\end{lstlisting}
+
+(가):\,\rule[-.3ex]{3cm}{0.5pt}\qquad (나):\,\rule[-.3ex]{3cm}{0.5pt}
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+사용자가 \texttt{-15}를 입력했을 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = int(input())
+if n >= 0:
+    if n % 2 == 0:
+        print("양수 짝수")
+    else:
+        print("양수 홀수")
+else:
+    if n % 2 == 0:
+        print("음수 짝수")
+    else:
+        print("음수 홀수")
+\end{lstlisting}
+\answerblank[5cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+a, b, c = 5, 3, 8
+if not (a > b and b > c):
+    print("조건1")
+if a > c or b < c:
+    print("조건2")
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+좌표 \texttt{(x, y)}가 어느 사분면에 있는지 출력하는 코드이다. 빈칸을 채우시오.
+\begin{lstlisting}
+x = int(input())
+y = int(input())
+if x > 0 and y > 0:
+    print("제1사분면")
+elif __________ and y > 0:
+    print("제2사분면")
+elif x < 0 and __________:
+    print("제3사분면")
+else:
+    print("제4사분면")
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 3
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{3단원\quad 조건문 응용 프로젝트}{4문제}
+
+\begin{problembox}{\tagpredict}
+사용자가 차례로 \texttt{170}과 \texttt{68}을 입력했을 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+height = int(input()) / 100
+weight = int(input())
+bmi = weight / (height * height)
+bmi = int(bmi * 10) / 10
+
+if bmi >= 30:
+    print(bmi, "고도비만")
+elif bmi >= 25:
+    print(bmi, "비만")
+elif bmi >= 23:
+    print(bmi, "과체중")
+elif bmi >= 18.5:
+    print(bmi, "정상")
+else:
+    print(bmi, "저체중")
+\end{lstlisting}
+\begin{hintbox}
+\texttt{int(값 * 10) / 10}은 소수 첫째 자리까지만 남기는 테크닉입니다.
+\end{hintbox}
+\answerblank[8cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+가위바위보 게임에서 승패를 판별하는 코드이다. 빈칸을 채우시오.\\
+(\,\texttt{user}와 \texttt{com}은 각각 \texttt{"가위"}, \texttt{"바위"}, \texttt{"보"} 중 하나\,)
+\begin{lstlisting}
+if user == com:
+    print("비김")
+elif (user == "가위" and com == __________) or \
+     (user == "바위" and com == __________) or \
+     (user == "보" and com == __________):
+    print("승리")
+else:
+    print("패배")
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+사용자가 차례로 \texttt{10}, \texttt{+}, \texttt{3}을 입력했을 때, 다음 코드의 실행 결과를 쓰시오.\\
+그 다음, 사용자가 \texttt{10}, \texttt{\%}, \texttt{3}을 입력했을 때의 결과도 쓰시오.
+\begin{lstlisting}
+a = int(input())
+op = input()
+b = int(input())
+if op == "+":
+    print(a + b)
+elif op == "-":
+    print(a - b)
+elif op == "*":
+    print(a * b)
+elif op == "/":
+    print(a / b)
+else:
+    print("지원하지 않는 연산입니다")
+\end{lstlisting}
+입력 \texttt{10, +, 3}\;\;결과:\,\rule[-.3ex]{4cm}{0.5pt}
+
+입력 \texttt{10, \%, 3}\;\;결과:\,\rule[-.3ex]{4cm}{0.5pt}
+\end{problembox}
+
+\begin{problembox}{\tagconcept}
+다음 코드에서 \texttt{money = 3500}일 때 실행 결과를 쓰시오. 또한, \texttt{elif}를 모두 \texttt{if}로 바꾸면 결과가 어떻게 달라지는지 설명하시오.
+\begin{lstlisting}
+money = 3500
+if money >= 5000:
+    print("스테이크")
+elif money >= 3000:
+    print("김치찌개")
+elif money >= 1500:
+    print("라면")
+else:
+    print("물")
+\end{lstlisting}
+\answerlines[3]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 4
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{4단원\quad while 반복문과 누적 계산}{7문제}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = 1234
+total = 0
+while n > 0:
+    total = total + n % 10
+    n = n // 10
+print(total)
+\end{lstlisting}
+\begin{hintbox}
+변수 \texttt{n}과 \texttt{total}의 값 변화를 단계별로 추적해 보세요.
+\end{hintbox}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+i = 1
+result = 1
+while i <= 5:
+    result = result * i
+    i = i + 1
+print(result)
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+사용자가 \texttt{-1}을 입력할 때까지 숫자를 계속 입력받아 합계를 구하는 코드이다. 빈칸 \texttt{(가)}, \texttt{(나)}를 채우시오.
+\begin{lstlisting}
+total = 0
+num = int(input())
+while __(가)__:
+    total = total + num
+    num = __(나)__
+print("합계:", total)
+\end{lstlisting}
+(가):\,\rule[-.3ex]{4cm}{0.5pt}\qquad (나):\,\rule[-.3ex]{4cm}{0.5pt}
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = 36
+i = 1
+count = 0
+while i <= n:
+    if n % i == 0:
+        count = count + 1
+    i = i + 1
+print(count)
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = 50
+i = 1
+total = 0
+while i <= n:
+    if i % 10 == 0:
+        total = total + i
+    i = i + 1
+print(total)
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = 7
+i = 2
+is_prime = True
+while i < n:
+    if n % i == 0:
+        is_prime = False
+    i = i + 1
+if is_prime:
+    print("소수")
+else:
+    print("소수 아님")
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+1부터 \texttt{n}까지의 수 중 3의 배수이면서 5의 배수가 아닌 수의 합을 구하는 코드이다. 빈칸을 채우시오.
+\begin{lstlisting}
+n = 30
+i = 1
+total = 0
+while i <= n:
+    if __________ and __________:
+        total = total + i
+    i = i + 1
+print(total)
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 5
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{5단원\quad for 반복문과 패턴 출력}{6문제}
+
+\begin{problembox}{\tagconcept}
+다음 세 \texttt{range}가 생성하는 수열을 각각 나열하시오.
+
+\begin{tabularx}{\textwidth}{@{} l X @{}}
+(1) \texttt{range(1, 10, 2)} & 답:\,\rule[-.3ex]{6cm}{0.5pt} \\[6pt]
+(2) \texttt{range(10, 0, -3)} & 답:\,\rule[-.3ex]{6cm}{0.5pt} \\[6pt]
+(3) \texttt{range(5)} & 답:\,\rule[-.3ex]{6cm}{0.5pt} \\
+\end{tabularx}
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+total = 0
+for i in range(1, 101):
+    if i % 3 == 0 and i % 5 == 0:
+        total = total + i
+print(total)
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+\texttt{n = 24}일 때, 다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+n = 24
+gcd = 1
+for i in range(1, min(n, 18) + 1):
+    if n % i == 0 and 18 % i == 0:
+        gcd = i
+print(gcd)
+\end{lstlisting}
+\answerblank[4cm]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+입력된 수 \texttt{n}의 약수를 모두 출력하되, 한 줄에 공백으로 구분하여 출력하는 코드이다. 빈칸을 채우시오.
+\begin{lstlisting}
+n = int(input())
+for i in range(1, __________):
+    if n % i == 0:
+        print(i, end=__________)
+\end{lstlisting}
+\answerlines[2]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+for i in range(1, 6):
+    if i == 3:
+        continue
+    if i == 5:
+        break
+    print(i, end=" ")
+\end{lstlisting}
+\answerblank[6cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+for i in range(2, 6):
+    count = 0
+    for j in range(1, i + 1):
+        if i % j == 0:
+            count = count + 1
+    if count == 2:
+        print(i, end=" ")
+\end{lstlisting}
+\answerblank[6cm]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 6
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{6단원\quad 중첩 반복문 마스터}{4문제}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+for i in range(1, 5):
+    for j in range(1, 5):
+        if i == j:
+            print(1, end=" ")
+        else:
+            print(0, end=" ")
+    print()
+\end{lstlisting}
+\answerlines[4]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+for i in range(1, 6):
+    for j in range(i, 6):
+        print("*", end="")
+    print()
+\end{lstlisting}
+\answerlines[5]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+다음 출력을 만들어내는 코드의 빈칸을 채우시오.
+
+\textbf{[출력]}\\
+\texttt{1}\\
+\texttt{1 2}\\
+\texttt{1 2 3}\\
+\texttt{1 2 3 4}
+
+\begin{lstlisting}
+for i in range(1, 5):
+    for j in range(1, __________):
+        print(j, end=" ")
+    print()
+\end{lstlisting}
+\answerblank[6cm]
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+for i in range(2, 10, 2):
+    for j in range(1, 4):
+        print(i, "x", j, "=", i * j)
+    print("---")
+\end{lstlisting}
+\begin{hintbox}
+\texttt{range(2, 10, 2)}는 짝수 단만 생성합니다. 안쪽 반복은 1\,--\,3까지만.
+\end{hintbox}
+\answerlines[6]
+\end{problembox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 7
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{7단원\quad 기초 모듈 활용\;{\normalsize\color{graytext}(부록)}}{3문제}
+
+\begin{problembox}{\tagconcept}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+import math
+print(math.ceil(3.2))
+print(math.floor(3.8))
+print(math.floor(-2.3))
+\end{lstlisting}
+\answerlines[3]
+\end{problembox}
+
+\begin{problembox}{\tagfill}
+\texttt{random} 모듈을 사용하여 1부터 6까지의 정수를 무작위로 하나 출력하는 코드이다. 빈칸을 채우시오.
+\begin{lstlisting}
+import random
+dice = random.__(가)__(__(나)__, __(다)__)
+print("주사위:", dice)
+\end{lstlisting}
+(가):\,\rule[-.3ex]{3cm}{0.5pt}\quad (나):\,\rule[-.3ex]{2cm}{0.5pt}\quad (다):\,\rule[-.3ex]{2cm}{0.5pt}
+\end{problembox}
+
+\begin{problembox}{\tagpredict}
+다음 코드의 실행 결과를 쓰시오.
+\begin{lstlisting}
+import math
+r = 5
+area = math.pi * r ** 2
+area = round(area, 2)
+print(area)
+\end{lstlisting}
+\begin{hintbox}
+\texttt{math.pi}는 3.141592653589793…입니다. \texttt{round(값, 2)}는 소수 둘째 자리 반올림.
+\end{hintbox}
+\answerblank[5cm]
+\end{problembox}
+
+\vfill
+\begin{center}
+\color{graytext}\small — 문제편 끝 —
+\end{center}
+
+\end{document}
