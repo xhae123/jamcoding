@@ -1,0 +1,521 @@
+% !TEX program = xelatex
+\documentclass[a4paper, 11pt]{article}
+
+% ── Encoding & Fonts ──
+\usepackage{fontspec}
+\setmainfont{Noto Sans CJK KR}
+\setsansfont{Noto Sans CJK KR}
+\setmonofont{Noto Sans Mono CJK KR}[Scale=0.85, BoldFont=Noto Sans Mono CJK KR Bold]
+
+% ── Page Layout ──
+\usepackage[
+  top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm,
+  headheight=14pt
+]{geometry}
+
+% ── Colors (ink-saving) ──
+\usepackage{xcolor}
+\definecolor{mainblue}{HTML}{1B3A5C}
+\definecolor{codeborder}{HTML}{AAAAAA}
+\definecolor{sectionbar}{HTML}{333333}
+\definecolor{darktext}{HTML}{1F2937}
+\definecolor{graytext}{HTML}{6B7280}
+\definecolor{answerborder}{HTML}{333333}
+\definecolor{explainborder}{HTML}{888888}
+
+% ── Packages ──
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{lastpage}
+
+% ── Paragraph & Spacing ──
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setstretch{1.25}
+
+% ── Header / Footer ──
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\color{graytext} 파이썬 요약 문제집 — 정답 및 해설}
+\fancyhead[R]{\small\color{graytext} 고1 정보교과 대비}
+\fancyfoot[C]{\small\color{graytext} \thepage\,/\,\pageref{LastPage}}
+
+% ── Code Listing Style ──
+\lstdefinestyle{pycode}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{black},
+  stringstyle=\color{darktext},
+  commentstyle=\itshape\color{graytext},
+  backgroundcolor=\color{white},
+  frame=single,
+  rulecolor=\color{codeborder},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  aboveskip=6pt,
+  belowskip=6pt,
+  xleftmargin=6pt,
+  framexleftmargin=6pt,
+}
+\lstset{style=pycode}
+
+% ── Section Styling (outline only) ──
+\newcommand{\unitsection}[1]{%
+  \vspace{8pt}%
+  \noindent%
+  \begin{tikzpicture}
+    \draw[sectionbar, line width=1.2pt] (0,0) rectangle (\textwidth, 0.85);
+    \node[anchor=west, font=\large\bfseries\color{sectionbar}] at (0.4, 0.425) {#1};
+  \end{tikzpicture}%
+  \vspace{6pt}%
+}
+
+% ── Answer Box (white bg, thin border) ──
+\newtcolorbox{answerbox}[1]{%
+  enhanced, breakable,
+  colback=white,
+  colframe=answerborder,
+  coltitle=black,
+  fonttitle=\bfseries\small,
+  title={문제 #1},
+  colbacktitle=white,
+  left=8pt, right=8pt, top=5pt, bottom=5pt,
+  boxrule=0.5pt,
+  arc=2pt,
+  toptitle=3pt, bottomtitle=3pt,
+  titlerule=0.4pt,
+}
+
+% ── Explanation Box (left rule only) ──
+\newtcolorbox{explainbox}{%
+  enhanced, breakable,
+  colback=white,
+  colframe=explainborder,
+  boxrule=0pt, leftrule=2pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  arc=0pt,
+  fontupper=\small\color{darktext},
+}
+
+% ══════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── COVER PAGE (ink-saving: text only) ──
+\thispagestyle{empty}
+
+\vspace*{\fill}
+\begin{center}
+{\small\color{graytext} 고1 정보교과 대비}\\[20pt]
+{\fontsize{36}{42}\selectfont\bfseries\color{mainblue} 파이썬}\\[8pt]
+{\fontsize{24}{30}\selectfont\color{sectionbar} 요약 문제집}\\[20pt]
+\rule{6cm}{0.8pt}\\[14pt]
+{\fontsize{13}{18}\selectfont\color{graytext} 정답 및 해설}\\[30pt]
+{\small\color{graytext} 총 37문제 · 문제편과 함께 사용하세요}
+\end{center}
+\vspace*{\fill}
+
+\clearpage
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 1
+% ══════════════════════════════════════════════════════════════
+\unitsection{1단원\quad 입출력 기본 다지기}
+
+\begin{answerbox}{1}
+\textbf{답:}\\
+\texttt{2025}\\
+\texttt{45}
+
+\begin{explainbox}
+첫 번째 \texttt{print}에서 \texttt{"20" + "25"}는 문자열 결합이므로 \texttt{"2025"}가 된다. 두 번째 \texttt{print}에서 \texttt{int()}로 변환 후 더하면 정수 덧셈 \texttt{20 + 25 = 45}가 된다. \texttt{input()}의 반환값은 항상 문자열이라는 점이 핵심이다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{2}
+\textbf{답:}\quad \texttt{2017/08/23}
+
+\begin{explainbox}
+슬라이싱 \texttt{data[0:2]}는 \texttt{"17"}, \texttt{int("17") + 2000 = 2017}. \texttt{data[2:4]}는 \texttt{"08"}, \texttt{data[4:6]}는 \texttt{"23"}. \texttt{sep="/"}에 의해 값 사이에 \texttt{/}가 삽입된다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{3}
+\textbf{답:}\quad (가): \texttt{"\$"}\qquad (나): \texttt{"\textbackslash n"} 또는 생략 가능
+
+\begin{explainbox}
+\texttt{sep="\$"}로 값 사이에 달러 기호가 들어간다. \texttt{end}의 기본값은 \texttt{"\textbackslash n"}(줄바꿈)이므로 기본값 그대로거나 \texttt{"\textbackslash n"}을 명시하면 된다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{4}
+\textbf{답:}\\
+\texttt{2 1}\\
+\texttt{343}
+
+\begin{explainbox}
+\texttt{7 // 3 = 2}(몫), \texttt{7 \% 3 = 1}(나머지). \texttt{7 ** 3 = 343}(거듭제곱).
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{5}
+\textbf{답:}\quad \texttt{input()}의 반환값은 문자열인데 정수 \texttt{1}과 더하려 해서 \texttt{TypeError} 발생.
+
+\textbf{수정:}\quad \texttt{age = int(input("나이를 입력하세요: "))}
+
+\begin{explainbox}
+\texttt{input()}은 항상 \texttt{str} 타입을 반환한다. 문자열과 정수는 \texttt{+} 연산이 불가능하므로 \texttt{int()}로 형변환해야 한다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{6}
+\textbf{답:}\quad \texttt{1 시간 10 분 50 초}
+
+\begin{explainbox}
+\texttt{4250 // 3600 = 1}, \texttt{4250 \% 3600 = 650}, \texttt{650 // 60 = 10}, \texttt{4250 \% 60 = 50}.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 2
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{2단원\quad 조건문 완전 정복}
+
+\begin{answerbox}{7}
+\textbf{답:}\quad 코드 A: \texttt{C}\qquad 코드 B: \texttt{C}
+
+\textbf{이유:}\quad 코드 A는 \texttt{elif}로 연결되어 조건이 참인 첫 번째 블록만 실행. 코드 B는 독립된 \texttt{if}문 3개이므로 참인 조건이 모두 실행. \texttt{score = 72}에서는 결과가 같지만, \texttt{score = 85}라면 코드 A는 \texttt{"B"}만, 코드 B는 \texttt{"B"}와 \texttt{"C"} 둘 다 출력한다.
+
+\begin{explainbox}
+\texttt{if-elif-else}는 하나의 분기 구조이고, 연속된 \texttt{if}는 각각 독립적으로 판단한다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{8}
+\textbf{답:}
+
+오류 1: 2행 \texttt{if x > 0} 뒤에 콜론(\texttt{:})이 빠져 있다.\\
+오류 2: 4행 \texttt{x = 0}은 대입 연산자이다. 비교 연산자 \texttt{x == 0}으로 바꿔야 한다.
+
+\begin{explainbox}
+\texttt{=}(대입)과 \texttt{==}(비교)의 구분은 조건문에서 가장 흔한 실수이다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{9}
+\textbf{답:}\quad \texttt{윤년}
+
+\begin{explainbox}
+\texttt{2024 \% 400 = 24}(거짓), \texttt{2024 \% 100 = 24}(거짓), \texttt{2024 \% 4 = 0}(참) → \texttt{"윤년"}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{10}
+\textbf{답:}\quad (가): \texttt{and}\qquad (나): \texttt{or}
+
+\begin{explainbox}
+세 변이 모두 같아야 정삼각형이므로 \texttt{and}. 어느 두 변이라도 같으면 이등변삼각형이므로 \texttt{or}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{11}
+\textbf{답:}\quad \texttt{음수 홀수}
+
+\begin{explainbox}
+\texttt{-15 >= 0}은 거짓 → \texttt{else} 블록. 파이썬에서 \texttt{-15 \% 2 = 1}이므로 \texttt{== 0}은 거짓 → \texttt{"음수 홀수"}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{12}
+\textbf{답:}\\
+\texttt{조건1}\\
+\texttt{조건2}
+
+\begin{explainbox}
+\texttt{a > b and b > c}는 거짓(\texttt{3 > 8}이 거짓). \texttt{not} 거짓 = 참 → \texttt{"조건1"}. \texttt{a > c}는 거짓, \texttt{b < c}는 참. \texttt{or}이므로 전체 참 → \texttt{"조건2"}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{13}
+\textbf{답:}\quad 첫 번째 빈칸: \texttt{x < 0}\qquad 두 번째 빈칸: \texttt{y < 0}
+
+\begin{explainbox}
+제2사분면: \texttt{x < 0, y > 0}. 제3사분면: \texttt{x < 0, y < 0}.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 3
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{3단원\quad 조건문 응용 프로젝트}
+
+\begin{answerbox}{14}
+\textbf{답:}\quad \texttt{23.5 과체중}
+
+\begin{explainbox}
+\texttt{height = 1.7}. \texttt{bmi = 68 / 2.89 ≈ 23.529…}. \texttt{int(23.529… * 10) = 235}. \texttt{235 / 10 = 23.5}. \texttt{23 <= 23.5 < 25}이므로 \texttt{"과체중"}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{15}
+\textbf{답:}\quad 순서대로 \texttt{"보"}, \texttt{"가위"}, \texttt{"바위"}
+
+\begin{explainbox}
+가위 → 보를 이김, 바위 → 가위를 이김, 보 → 바위를 이김. 사용자 승리 조건이므로 상대방에 지는 쪽을 넣는다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{16}
+\textbf{답:}\\
+입력 \texttt{10, +, 3} → \texttt{13}\\
+입력 \texttt{10, \%, 3} → \texttt{지원하지 않는 연산입니다}
+
+\begin{explainbox}
+\texttt{\%}는 어떤 \texttt{elif}에도 해당하지 않으므로 \texttt{else}가 실행된다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{17}
+\textbf{답:}\quad \texttt{김치찌개}
+
+\textbf{elif → if로 바꾸면:}\quad \texttt{김치찌개}와 \texttt{라면}이 모두 출력된다.
+
+\begin{explainbox}
+\texttt{elif}일 때는 첫 번째 참인 조건만 실행. \texttt{if}로 바꾸면 독립 판단이므로 \texttt{>= 3000}과 \texttt{>= 1500} 모두 참이 되어 둘 다 실행.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 4
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{4단원\quad while 반복문과 누적 계산}
+
+\begin{answerbox}{18}
+\textbf{답:}\quad \texttt{10}
+
+\begin{explainbox}
+각 자릿수를 분리하여 합산하는 코드.
+\texttt{n=1234→4+}, \texttt{n=123→3+}, \texttt{n=12→2+}, \texttt{n=1→1} = 10.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{19}
+\textbf{답:}\quad \texttt{120}
+
+\begin{explainbox}
+\texttt{1 × 1 × 2 × 3 × 4 × 5 = 120}. 5!(팩토리얼) 계산.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{20}
+\textbf{답:}\quad (가): \texttt{num != -1}\qquad (나): \texttt{int(input())}
+
+\begin{explainbox}
+\texttt{-1}이 입력되면 반복을 멈추는 보초값(sentinel) 패턴. 반복 안에서 다음 입력을 받아야 한다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{21}
+\textbf{답:}\quad \texttt{9}
+
+\begin{explainbox}
+36의 약수: 1, 2, 3, 4, 6, 9, 12, 18, 36 → 총 9개.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{22}
+\textbf{답:}\quad \texttt{150}
+
+\begin{explainbox}
+1\textasciitilde50에서 10의 배수: 10 + 20 + 30 + 40 + 50 = 150.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{23}
+\textbf{답:}\quad \texttt{소수}
+
+\begin{explainbox}
+2부터 6까지 반복하며 \texttt{7 \% i == 0}인 경우 없음 → \texttt{is\_prime} = \texttt{True} 유지. 7은 소수.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{24}
+\textbf{답:}\quad \texttt{i \% 3 == 0}\;\;과\;\;\texttt{i \% 5 != 0}
+
+\begin{explainbox}
+3의 배수: \texttt{i \% 3 == 0}. 5의 배수 아닌: \texttt{i \% 5 != 0}. 해당하는 수: 3, 6, 9, 12, 18, 21, 24, 27. 합: 120.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 5
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{5단원\quad for 반복문과 패턴 출력}
+
+\begin{answerbox}{25}
+\textbf{답:}\\
+(1) \texttt{1, 3, 5, 7, 9}\\
+(2) \texttt{10, 7, 4, 1}\\
+(3) \texttt{0, 1, 2, 3, 4}
+
+\begin{explainbox}
+\texttt{range(시작, 끝, 간격)}에서 끝 값은 포함되지 않는다. \texttt{range(5)}는 \texttt{range(0, 5)}와 동일.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{26}
+\textbf{답:}\quad \texttt{315}
+
+\begin{explainbox}
+1\textasciitilde100에서 15의 배수(3과 5의 공배수): 15 + 30 + 45 + 60 + 75 + 90 = 315.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{27}
+\textbf{답:}\quad \texttt{6}
+
+\begin{explainbox}
+24와 18의 공약수를 1부터 순서대로 찾아 마지막 값을 저장. 공약수: 1, 2, 3, 6. 최대공약수 = 6.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{28}
+\textbf{답:}\quad 첫 번째 빈칸: \texttt{n + 1}\qquad 두 번째 빈칸: \texttt{" "}
+
+\begin{explainbox}
+\texttt{range(1, n+1)}로 1부터 n까지 확인. \texttt{end=" "}로 공백 구분.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{29}
+\textbf{답:}\quad \texttt{1 2 4 }
+
+\begin{explainbox}
+\texttt{i=1}: 출력. \texttt{i=2}: 출력. \texttt{i=3}: \texttt{continue}로 건너뜀. \texttt{i=4}: 출력. \texttt{i=5}: \texttt{break}로 종료.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{30}
+\textbf{답:}\quad \texttt{2 3 5 }
+
+\begin{explainbox}
+약수의 개수가 정확히 2개인 수 = 소수. 2\textasciitilde5 범위에서 소수: 2, 3, 5.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 6
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{6단원\quad 중첩 반복문 마스터}
+
+\begin{answerbox}{31}
+\textbf{답:}\\
+\texttt{1 0 0 0}\\
+\texttt{0 1 0 0}\\
+\texttt{0 0 1 0}\\
+\texttt{0 0 0 1}
+
+\begin{explainbox}
+\texttt{i == j}인 위치에만 1이 출력되어 대각선에 1이 놓이는 4×4 단위행렬 형태.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{32}
+\textbf{답:}\\
+\texttt{*****}\\
+\texttt{****}\\
+\texttt{***}\\
+\texttt{**}\\
+\texttt{*}
+
+\begin{explainbox}
+\texttt{i=1}일 때 별 5개, \texttt{i=2}일 때 4개, … 순으로 줄어드는 역삼각형 패턴.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{33}
+\textbf{답:}\quad \texttt{i + 1}
+
+\begin{explainbox}
+\texttt{i=1}일 때 \texttt{j}는 1\textasciitilde1, \texttt{i=2}일 때 1\textasciitilde2, …이므로 끝은 \texttt{i + 1}.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{34}
+\textbf{답:}\\
+\texttt{2 x 1 = 2}\\
+\texttt{2 x 2 = 4}\\
+\texttt{2 x 3 = 6}\\
+\texttt{---}\\
+\texttt{4 x 1 = 4}\\
+\texttt{4 x 2 = 8}\\
+\texttt{4 x 3 = 12}\\
+\texttt{---}\\
+\texttt{6 x 1 = 6}\\
+\texttt{6 x 2 = 12}\\
+\texttt{6 x 3 = 18}\\
+\texttt{---}\\
+\texttt{8 x 1 = 8}\\
+\texttt{8 x 2 = 16}\\
+\texttt{8 x 3 = 24}\\
+\texttt{---}
+
+\begin{explainbox}
+\texttt{range(2, 10, 2)} → 2, 4, 6, 8(짝수 단). 안쪽 1\textasciitilde3까지 곱. 각 단 끝에 \texttt{"---"} 출력.
+\end{explainbox}
+\end{answerbox}
+
+% ══════════════════════════════════════════════════════════════
+%  UNIT 7
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\unitsection{7단원\quad 기초 모듈 활용\;{\normalsize\color{graytext}(부록)}}
+
+\begin{answerbox}{35}
+\textbf{답:}\\
+\texttt{4}\\
+\texttt{3}\\
+\texttt{-3}
+
+\begin{explainbox}
+\texttt{ceil}은 올림, \texttt{floor}는 내림. 음수에서 \texttt{floor(-2.3) = -3}: 내림은 더 작은 정수 방향.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{36}
+\textbf{답:}\quad (가): \texttt{randint}\qquad (나): \texttt{1}\qquad (다): \texttt{6}
+
+\begin{explainbox}
+\texttt{random.randint(a, b)}는 a 이상 b 이하의 정수를 반환. \texttt{range}와 달리 끝 값이 포함된다.
+\end{explainbox}
+\end{answerbox}
+
+\begin{answerbox}{37}
+\textbf{답:}\quad \texttt{78.54}
+
+\begin{explainbox}
+\texttt{math.pi * 25 = 78.5398…}. \texttt{round(78.5398…, 2) = 78.54}.
+\end{explainbox}
+\end{answerbox}
+
+\vfill
+\begin{center}
+\color{graytext}\small — 정답 및 해설 끝 —
+\end{center}
+
+\end{document}
